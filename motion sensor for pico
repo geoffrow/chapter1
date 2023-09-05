@@ -14,3 +14,53 @@ while True:
        print("Waiting for movement")
        led.low()
 utime.sleep(0.2)
+
+1. Import the Pin class from the machine library, then import utime. These libraries enable us to respectively communicate with the GPIO and to control the pace of our project.
+
+from machine import Pin
+import utime
+2. Create an object, “led” which is used to create a link between the physical GPIO pin and our code. In this case, it will set GPIO 28 (which maps to physical pin 34 on the board) as an output pin, where current will flow from the Raspberry Pi Pico GPIO to the LED. We then use the object to instruct the GPIO pin to pull low., In other words this will ensure that the GPIO pin is turned off at the start of our project.
+
+led = Pin(28, Pin.OUT)
+3. Create another object, “pir”. This object is used to create a connection between our code and the GPIO pin used for the OUT connection from the PIR. By default, the PIR sensor OUT is pulled high, and when movement is detected the PIR pulls the OUT pin low. To ensure that the sensor works correctly, we set the pin as an input, and then pull the GPIO pin high.
+
+pir = Pin(16, Pin.IN, Pin.PULL_UP)
+4. Ensure that the LED is turned off at the start of the project, then wait for three seconds before moving on. These two lines ensure we do not see a “false trigger” from the LED, and give the sensor some time to settle before use.
+
+led.low()
+utime.sleep(3)
+5. Inside of a while True loop, a loop with no end, use a print function to print the current value of the GPIO pin used for the PIR sensor. This will return a 1 if there is no movement, and a 0 if there is.
+
+while True:
+   print(pir.value())
+6. Create a conditional test that checks the value stored in pir.value. If the value is 0, movement detected then print a message to the Python Shell. Then turn the LED on (high) and pause for five seconds, keeping the LED lit for that time.
+
+if pir.value() == 0:
+       print("LED On")
+       led.high()
+       utime.sleep(5)
+7. The last part of the conditional test is activated when there is no movement detected. Use an Else condition to print a message to the Python Shell, then add a line to turn the LED off (low) and then pause for 0.2 seconds. Then the loop repeats and the conditional test is run again.
+
+else:
+       print("Waiting for movement")
+       led.low()
+       utime.sleep(0.2)
+8. Click on Save and choose to save the code to the MicroPython device (Raspberry Pi Pico). Name the file PIR.py and click Ok to save. Your code should look like this.
+
+from machine import Pin
+import utime
+led = Pin(28, Pin.OUT)
+pir = Pin(16, Pin.IN, Pin.PULL_UP)
+led.low()
+utime.sleep(3)
+while True:
+   print(pir.value())
+   if pir.value() == 0:
+       print("LED On")
+       led.high()
+       utime.sleep(5)
+   else:
+       print("Waiting for movement")
+       led.low()
+utime.sleep(0.2)
+9. To run the code, click on the Green play / arrow button and the Python Shell will update to say “Waiting for movement” and “LED On”. The PIR sensor is exceptionally sensitive and at first you may see a few false triggers, but the sensor will settle.
